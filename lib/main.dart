@@ -1,32 +1,66 @@
- import 'package:flutter/material.dart';
- 
- // main function runs automatically when the file is parced. 
-//  void main() {
-//    // from material.dart file
-//    runApp(MyApp());
-//  }
+import 'package:flutter/material.dart';
+import './question.dart';
+import './answer.dart';
 
- void main() => runApp(MyApp());
- 
-  // need to extend either stateless or state widget 
- class MyApp extends StatelessWidget {
-   // @override decorator; makes the code cleaner; 
-   @override 
-    Widget build(BuildContext context) {
-      var questions = [
-      'What\'s your favorite color?',
-      'What\'s your favorite animal?'
-      ];
-        return MaterialApp(home: Scaffold(
-          appBar: AppBar(title: Text('My first app'),),
-          body: Column(children: [
-            Text('The question!'), 
-            RaisedButton(child: Text('Answer 1'), onPressed: null),
-            RaisedButton(child: Text('Answer 1'), onPressed: null),
-            RaisedButton(child: Text('Answer 1'), onPressed: null),
+// void main() {
+//   runApp(MyApp());
+// }
 
-          ],),
+void main() => runApp(MyApp());
+
+class MyApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _MyAppState();
+  }
+}
+
+class _MyAppState extends State<MyApp> {
+  var _questionIndex = 0;
+
+  void _answerQuestion() {
+    // setState is a trigger that informs flutter to re-run build() of the Widget. 
+    setState(() {
+      _questionIndex = _questionIndex + 1;
+    });
+    print(_questionIndex);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var questions = [
+      {
+        'questionText' : 'What\'s your favorite color?', 
+        'answers' : ['black', 'red', 'purple', 'white'],
+        },
+      {
+        'questionText' : 'What\'s your favorite animal?', 
+        'answers' : ['rabbit', 'snake', 'lion'],
+        },
+      {
+        'questionText' : 'What\'s your plan for NYE?', 
+        'answers' : ['Stay home', 'Go out', 'Drink away', 'Don\'t know yet'],
+        },
+    ];
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('My First App'),
         ),
-        ); 
-    }
- }
+        body: Column(
+          children: [
+            Question(
+              questions[_questionIndex]['questionText'],
+            ),
+            ...(questions[_questionIndex]['answers'] as List<String>)
+            .map((answer) {
+              return Answer(_answerQuestion, answer);
+            }
+            ).toList()
+          ],
+        ),
+      ),
+    );
+  }
+}
